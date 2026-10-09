@@ -88,3 +88,6 @@ button.danger-solid{background:#E5484D;color:#fff}
   .pe-zoom{max-width:70px;margin-left:auto;margin-right:auto}
   .pe-hint{text-align:center}
 }
+@media(max-width:700px){
+  input,select,textarea{font-size:16px}
+}
