@@ -4,7 +4,7 @@ import Login from './pages/Login';
 import Bookings from './pages/Bookings';
 import Catalog from './pages/Catalog';
 
-const TABS = [['applications','Брони','▤'],['courses','Туры','▧'],['teachers','Гиды','♙']];
+const TABS = [['applications','Брони','▤'],['courses','Туры','▧'],['teachers','Команда','♙']];
 
 export default function App() {
   const [authed, setAuthed] = useState(!!getToken());
@@ -16,7 +16,7 @@ export default function App() {
   return (
     <div className={'app-shell' + (nav ? ' nav-open' : '')}>
       <aside className="sidebar">
-        <div className="brand">khan-tengti<small>ПАНЕЛЬ УПРАВЛЕНИЯ</small></div>
+        <div className="brand">KHAN - TENGRI<small>ПАНЕЛЬ УПРАВЛЕНИЯ</small></div>
         <nav className="tabs">{TABS.map(([k, l, ic]) => (
           <button key={k} className={tab === k ? 'on' : ''} onClick={() => { setTab(k); setNav(false); }}><span>{ic}</span>{l}</button>
         ))}</nav>

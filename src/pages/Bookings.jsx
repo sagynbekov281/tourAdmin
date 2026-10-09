@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
+import Dialog from '../components/Dialog';
 
 const STATUS = { pending: 'ожидает', approved: 'одобрена', rejected: 'отклонена' };
 const waLink = (phone, text) => 'https://wa.me/' + String(phone).replace(/\D/g, '') + '?text=' + encodeURIComponent(text);
@@ -9,6 +10,10 @@ export default function Bookings() {
   const [msg, setMsg] = useState('Загрузка...');
   const [myWa, setMyWa] = useState(localStorage.getItem('my_wa') || '');
   const [openWa, setOpenWa] = useState(localStorage.getItem('open_wa') !== 'false');
+  const [del, setDel] = useState(null);
+  const [delBusy, setDelBusy] = useState(false);
+  const [delErr, setDelErr] = useState('');
+  const [info, setInfo] = useState('');
 
   const load = async () => {
     try { const r = await api('/api/bookings'); setList(r.bookings || []); setMsg(''); } catch (e) { setMsg(e.message); }
@@ -19,17 +24,31 @@ export default function Bookings() {
     const win = openWa ? window.open('', '_blank') : null;
     try {
       const r = await api(`/api/bookings/${a._id}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'approved' }) });
-      if (win) win.location.href = waLink(a.phone, `Здравствуйте, ${a.name}! Ваша бронь тура «${a.tour}» в TourCo подтверждена. Мы свяжемся с вами, чтобы согласовать детали поездки.`);
-      if (r.sms?.attempted) alert(r.sms.ok ? 'SMS клиенту отправлена.' : 'SMS НЕ отправилась:\n' + r.sms.error);
+      if (win) win.location.href = waLink(a.phone, `Здравствуйте, ${a.name}! Ваша бронь тура «${a.tour}» в KHAN - TENGRI подтверждена. Мы свяжемся с вами, чтобы согласовать детали поездки.`);
+      if (r.sms?.attempted) setInfo(r.sms.ok ? 'SMS клиенту отправлена.' : 'SMS НЕ отправилась: ' + r.sms.error);
       load();
-    } catch (e) { win?.close(); alert(e.message); }
+    } catch (e) { win?.close(); setInfo(e.message); }
   };
-  const reject = async (a) => { try { await api(`/api/bookings/${a._id}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'rejected' }) }); load(); } catch (e) { alert(e.message); } };
-  const remove = async (a) => { if (!confirm('Удалить эту бронь безвозвратно?')) return; try { await api('/api/bookings/' + a._id, { method: 'DELETE' }); load(); } catch (e) { alert(e.message); } };
-  const toClient = (a) => window.open(waLink(a.phone, `Здравствуйте, ${a.name}! Это TourCo. Вы оставили заявку на тур «${a.tour}». Когда вам удобно поговорить?`), '_blank');
+  const reject = async (a) => {
+    try { await api(`/api/bookings/${a._id}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'rejected' }) }); load(); }
+    catch (e) { setInfo(e.message); }
+  };
+
+  const doRemove = async () => {
+    setDelBusy(true); setDelErr('');
+    try {
+      await api('/api/bookings/' + del._id, { method: 'DELETE' });
+      const id = del._id;
+      setList((l) => l.filter((x) => x._id !== id));
+      setDel(null);
+    } catch (e) { setDelErr(e.message); }
+    finally { setDelBusy(false); }
+  };
+
+  const toClient = (a) => window.open(waLink(a.phone, `Здравствуйте, ${a.name}! Это KHAN - TENGRI. Вы оставили заявку на тур «${a.tour}». Когда вам удобно поговорить?`), '_blank');
   const toMe = (a) => {
-    if (!myWa.trim()) return alert('Впишите свой номер WhatsApp в поле сверху');
-    window.open(waLink(myWa, `Бронь TourCo\nИмя: ${a.name}\nТелефон: +${a.phone}\nТур: ${a.tour}\nЧеловек: ${a.peopleCount}` + (a.message ? `\nСообщение: ${a.message}` : '')), '_blank');
+    if (!myWa.trim()) return setInfo('Впишите свой номер WhatsApp в поле сверху');
+    window.open(waLink(myWa, `Бронь KHAN - TENGRI\nИмя: ${a.name}\nТелефон: +${a.phone}\nТур: ${a.tour}\nЧеловек: ${a.peopleCount}` + (a.message ? `\nСообщение: ${a.message}` : '')), '_blank');
   };
 
   return (
@@ -54,11 +73,21 @@ export default function Bookings() {
                 {!decided && <><button onClick={() => approve(a)}>✅ Одобрить</button><button className="secondary" onClick={() => reject(a)}>❌</button></>}
                 <button className="wa" onClick={() => toClient(a)}>💬 Клиенту</button>
                 <button className="secondary" onClick={() => toMe(a)}>📤 Мне</button>
-                {decided && <button className="danger" onClick={() => remove(a)}>🗑 Удалить</button>}
+                {decided && <button className="danger" onClick={() => { setDelErr(''); setDel(a); }}>🗑 Удалить</button>}
               </td>
             </tr>); })}</tbody>
         </table></div>
       )}
+
+      {del && (
+        <Dialog
+          title="Удалить бронь?"
+          text={`Бронь ${del.name} на тур «${del.tour}» будет удалена безвозвратно.`}
+          busy={delBusy} error={delErr}
+          onConfirm={doRemove} onClose={() => setDel(null)}
+        />
+      )}
+      {info && <Dialog text={info} onClose={() => setInfo('')} />}
     </>
   );
 }

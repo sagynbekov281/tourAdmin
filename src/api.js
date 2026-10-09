@@ -5,7 +5,7 @@ export const setToken = (t) => (t ? localStorage.setItem('admin_token', t) : loc
 export async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json' };
   if (getToken()) headers.Authorization = 'Bearer ' + getToken();
-  const res = await fetch(API + path, { ...opts, headers });
+  const res = await fetch(API + path, { ...opts, headers, cache: 'no-store' });
   let body = {};
   try { body = await res.json(); } catch (e) {}
   if (res.status === 401 && path !== '/api/admin/login') {

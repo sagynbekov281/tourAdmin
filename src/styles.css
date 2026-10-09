@@ -7,6 +7,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid #665ce866;border-color
 textarea{width:100%;resize:vertical}
 button{background:var(--accent);color:#fff;border:none;cursor:pointer;font-weight:650;min-height:40px}
 button:hover{filter:brightness(1.12)}
+button:disabled{cursor:not-allowed;opacity:.55;filter:none}
 button.secondary{background:transparent;border:1px solid var(--border);color:#D5D9EF}
 button.danger{background:#EF59691a;border:1px solid #EF596944;color:#FF8290}
 button.wa{background:#20C969;color:#052714}
@@ -41,9 +42,14 @@ s{color:var(--muted)}
 .modal{position:fixed;inset:0;background:#04050Fbb;display:flex;justify-content:center;padding:16px;overflow:auto;z-index:50}
 .box{background:var(--sidebar);border:1px solid var(--border);border-radius:14px;padding:20px;width:100%;max-width:560px;height:fit-content;margin-top:4vh}
 .box h2{margin:0 0 16px;font-size:16px}
+.form-language{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:-4px 0 16px;padding:5px;background:#15192E;border:1px solid var(--border);border-radius:11px}
+.form-language button{min-height:36px;padding:7px 10px;font-size:13px}.form-language button.active{background:var(--accent);color:#fff}
+.translation-tools{margin:-4px 0 16px;padding:12px;background:#15192E;border:1px solid var(--border);border-radius:10px}
+.translation-tools button{width:100%}.translation-tools p{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.4}
 .box label{display:block;font-size:12px;color:#A6AEC8;margin-bottom:12px}
 .box label input:not([type=checkbox]),.box select{width:100%;margin-top:4px}
 .box label textarea{margin-top:4px}.box label.chk{display:flex}
+.box label input[type=file]{width:100%;margin-top:6px}.photo-preview{display:block;width:100%;max-height:220px;object-fit:cover;border-radius:9px;margin-top:10px}
 .row{display:flex;gap:8px;margin-top:8px}.row button{flex:1}
 @media(max-width:700px){
 .sidebar{transform:translateX(-102%);transition:transform .2s}.nav-open .sidebar{transform:none}
@@ -55,4 +61,30 @@ table{min-width:0;background:transparent}thead{display:none}tbody{display:grid;g
 tr{display:grid;padding:4px 13px;background:var(--card);border:1px solid #222741;border-radius:12px}
 td{display:flex;justify-content:space-between;gap:14px;white-space:normal;text-align:right}
 td::before{content:attr(data-label);color:#858EAF;font-size:10px;text-transform:uppercase}
-td.actions::before{display:none}.actions button{flex:1}}
+td.actions::before{display:none}.actions button{flex:1}
+.modal{align-items:flex-end;padding:8px}.box{margin:0;max-height:calc(100dvh - 16px);overflow:auto;padding:16px;border-radius:16px}.box label{margin-bottom:14px}.row{position:sticky;bottom:-16px;margin:10px -16px -16px;padding:12px 16px;background:var(--sidebar);border-top:1px solid var(--border)}
+}
+/* окно подтверждения */
+.dialog{max-width:400px;margin-top:20vh}
+.dialog-text{margin:0 0 14px;line-height:1.5;color:#D5D9EF;font-size:14px}
+button.danger-solid{background:#E5484D;color:#fff}
+
+/* редактор фото */
+.pe{margin-bottom:14px}
+.pe-frame{position:relative;width:100%;overflow:hidden;border-radius:10px;background:#15192E;border:1px solid var(--border);margin-top:6px;touch-action:none;cursor:grab;user-select:none}
+.pe-frame.drag{cursor:grabbing}
+.pe-frame img{position:absolute;max-width:none;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.pe-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+.pe-zoom{display:flex;align-items:center;gap:10px;margin-top:10px;color:var(--muted)}
+.box .pe-zoom input{flex:1;width:auto;margin:0;padding:0;border:0;background:transparent}
+.pe-hint{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.4}
+.pe-actions{display:flex;gap:8px;margin-top:10px}.pe-actions button{flex:1}
+.pe-field{margin-bottom:6px}
+.pe-label{font-size:12px;color:#A6AEC8}
+/* рамка фото поменьше */
+.pe-frame{max-width:80px;margin-left:auto;margin-right:auto}
+@media(max-width:100px){
+  .pe-frame{max-width:90px}
+  .pe-zoom{max-width:70px;margin-left:auto;margin-right:auto}
+  .pe-hint{text-align:center}
+}

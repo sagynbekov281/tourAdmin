@@ -1,29 +1,38 @@
-const LEVELS = [['easy','Лёгкий'],['medium','Средний'],['hard','Сложный']];
-const ICONS = [['mountain','Горы'],['water','Вода/озеро'],['tent','Юрта/кемпинг'],['rideshare','Внедорожник'],['snow','Зима/лыжи'],['plant','Природа/заповедник']];
-// типы: text, textarea, number, date, select, checkbox, list (через запятую), lines (с новой строки)
+const LEVELS = [['easy', 'Лёгкий'], ['medium', 'Средний'], ['hard', 'Сложный']];
+
+// В форме оставлены только данные, которые показываются посетителю или нужны
+// для бронирования. Поля с суффиксом En открываются на отдельной вкладке.
 export const SCHEMA = {
-  courses: { one: 'тур', endpoint: '/api/admin/tours', key: 'tours', seed: 'tours', fields: [
-    ['title','Название тура (RU)','text'],['titleEn','Название тура (EN)','text'],
-    ['destination','Направление (RU)','text'],['destinationEn','Направление (EN)','text'],
-    ['description','Короткое описание (RU)','textarea'],['descriptionEn','Короткое описание (EN)','textarea'],
-    ['about','Подробное описание (RU)','textarea'],['aboutEn','Подробное описание (EN)','textarea'],
-    ['duration','Длительность, например: 3 дня / 2 ночи','text'],
-    ['difficultyKey','Сложность','select',LEVELS],['iconKey','Иконка','select',ICONS],
-    ['groupSize','Размер группы (RU)','text'],['groupSizeEn','Размер группы (EN)','text'],
-    ['totalSeats','Всего мест (0 — не отслеживать)','number'],['price','Цена за человека (сом)','number'],
-    ['discountPercent','Скидка, % (0 — нет)','number'],['discountEndsAt','Скидка до (пусто — без срока)','date'],
-    ['itinerary','Программа по дням, с новой строки (RU)','lines'],['itineraryEn','Программа по дням (EN)','lines'],
-    ['included','Что входит, через запятую (RU)','list'],['includedEn','Что входит (EN)','list'],
-    ['highlights','Теги для карточки (RU)','list'],['highlightsEn','Теги (EN)','list'],
-    ['rating','Рейтинг (0–5)','number'],['reviewsCount','Количество отзывов','number'],
-    ['order','Порядок (меньше — выше)','number'],['active','Показывать на сайте','checkbox'],
-  ]},
-  teachers: { one: 'гида', endpoint: '/api/admin/guides', key: 'guides', seed: 'guides', fields: [
-    ['name','Имя и фамилия','text'],['role','Должность (RU)','text'],['roleEn','Должность (EN)','text'],
-    ['experience','Опыт (RU)','text'],['experienceEn','Опыт (EN)','text'],
-    ['languages','Языки, через запятую (RU)','list'],['languagesEn','Языки (EN)','list'],
-    ['regions','Направления (RU)','list'],['regionsEn','Направления (EN)','list'],
-    ['bio','О себе (RU)','textarea'],['bioEn','О себе (EN)','textarea'],
-    ['order','Порядок','number'],['active','Показывать на сайте','checkbox'],
-  ]},
+  courses: {
+    one: 'тур', endpoint: '/api/admin/tours', key: 'tours', seed: 'tours', fields: [
+      ['title', 'Название тура', 'text'], ['titleEn', 'Название тура', 'text'],
+      ['photo', 'Фото тура (JPG, PNG или WebP, исходник до 5 МБ)', 'image'],
+      ['destination', 'Направление', 'text'], ['destinationEn', 'Направление', 'text'],
+      ['description', 'Краткое описание', 'textarea'], ['descriptionEn', 'Краткое описание', 'textarea'],
+      ['about', 'Информация о туре', 'textarea'], ['aboutEn', 'Информация о туре', 'textarea'],
+      ['duration', 'Длительность, например: 3 дня / 2 ночи', 'text'],
+      ['difficultyKey', 'Сложность', 'select', LEVELS],
+      ['groupSize', 'Размер группы', 'text'], ['groupSizeEn', 'Размер группы', 'text'],
+      ['totalSeats', 'Количество мест (0 — не ограничено)', 'number'],
+      ['price', 'Цена за человека (сом)', 'number'],
+      ['discountPercent', 'Скидка, %', 'number'],
+      ['discountEndsAt', 'Скидка действует до', 'date'],
+      ['itinerary', 'Программа по дням — каждый пункт с новой строки', 'lines'], ['itineraryEn', 'Программа по дням', 'lines'],
+      ['included', 'Что входит — через запятую', 'list'], ['includedEn', 'Что входит', 'list'],
+      ['highlights', 'Короткие теги для карточки — через запятую', 'list'], ['highlightsEn', 'Короткие теги для карточки', 'list'],
+      ['active', 'Показывать на сайте', 'checkbox'],
+    ],
+  },
+  teachers: {
+    one: 'сотрудника', endpoint: '/api/admin/guides', key: 'guides', seed: 'guides', fields: [
+      ['name', 'Имя и фамилия', 'text'], ['photo', 'Фотография (JPG, PNG или WebP, исходник до 5 МБ)', 'image'],
+      ['role', 'Роль', 'text'], ['roleEn', 'Роль', 'text'],
+      ['experience', 'Опыт', 'text'], ['experienceEn', 'Опыт', 'text'],
+      ['languages', 'Языки — через запятую', 'list'], ['languagesEn', 'Языки', 'list'],
+      ['regions', 'Направления — через запятую', 'list'], ['regionsEn', 'Направления', 'list'],
+      ['bio', 'Краткая информация', 'textarea'], ['bioEn', 'Краткая информация', 'textarea'],
+      ['about', 'Полная информация', 'textarea'], ['aboutEn', 'Полная информация', 'textarea'],
+      ['active', 'Показывать на сайте', 'checkbox'],
+    ],
+  },
 };
